@@ -18,7 +18,7 @@ public class SalesController {
         return "OK";
     }
 
-    @GetMapping("/vivek")
+    @GetMapping("/hello")
     public String hello(){
         return "Hello, Kashyap!";
     }
