@@ -13,6 +13,11 @@ public class SalesController {
     @Autowired
     SaleService service;
 
+    @GetMapping("/")
+    public String home() {
+        return "OK";
+    }
+
     @GetMapping("/employee")
     public List<Sales> getSales(){
         return service.getAllSales();

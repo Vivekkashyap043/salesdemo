@@ -6,7 +6,7 @@ metadata:
   labels:
     app: salesdemo
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: salesdemo
@@ -25,11 +25,11 @@ spec:
             httpGet:
               path: /
               port: 8081
-            initialDelaySeconds: 5
+            initialDelaySeconds: 20
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /
               port: 8081
-            initialDelaySeconds: 15
+            initialDelaySeconds: 40
             periodSeconds: 20
