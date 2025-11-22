@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: salesdemo-service
+  namespace: salesdemo
+spec:
+  selector:
+    app: salesdemo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8081
+      nodePort: 30080
+  type: NodePort
