@@ -18,6 +18,11 @@ public class SalesController {
         return "OK";
     }
 
+    @GetMapping("/vivek")
+    public String hello(){
+        return "Hello, Kashyap!";
+    }
+
     @GetMapping("/employee")
     public List<Sales> getSales(){
         return service.getAllSales();
