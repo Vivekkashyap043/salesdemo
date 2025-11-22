@@ -1,0 +1,52 @@
+Jenkins + Docker Hub + Kubernetes Setup Instructions
+
+----------------------------------------------------
+STEP 1 — Open Jenkins
+----------------------------------------------------
+URL: http://localhost:8090/
+
+----------------------------------------------------
+STEP 2 — Add Docker Hub Credentials in Jenkins
+----------------------------------------------------
+Navigate to:
+Manage Jenkins → Credentials → System → Global credentials → Add Credentials
+
+Fill the form exactly like this:
+
+Kind:        Username with password
+Username:    vivekkashyap043
+Password:    (your Docker Hub password or access token)
+ID:          dockerhub-creds
+Description: Docker Hub credentials
+
+Click "Save".
+
+These credentials are stored securely inside Jenkins.
+You NEVER hardcode passwords in the Jenkinsfile.
+
+----------------------------------------------------
+STEP 3 — Add Kubernetes kubeconfig File to Jenkins
+----------------------------------------------------
+1. Open Jenkins → Manage Jenkins
+2. Go to Credentials → System → Global credentials
+3. Click “Add Credentials”
+4. Fill the form:
+
+Kind:        Secret file
+File:        Upload → C:\Users\Vivek\.kube\config
+ID:          kubeconfig-file
+Description: Docker Desktop Kubernetes config
+
+5. Click "Save"
+
+----------------------------------------------------
+STEP 4 — Create GitHub Webhook using ngrok
+----------------------------------------------------
+Run the command:
+ngrok http 8090
+
+Copy the generated HTTPS URL, example:
+https://autogenous-unconvolutely-jinny.ngrok-free.dev
+
+Set GitHub webhook URL as:
+https://<your-ngrok-url>/github-webhook/
