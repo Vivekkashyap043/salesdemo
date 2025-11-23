@@ -156,7 +156,3 @@ So you must create the namespace/deployment/service **once** manually before rel
 - [ ] Kubernetes resources applied at least once (namespace, deployment, service)
 
 ---
-
-If you want, I can also:
-- Save this `README.md` to disk for you to download, or
-- Automatically update the `Jenkinsfile` to apply k8s manifests on first deploy.
