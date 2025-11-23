@@ -40,7 +40,64 @@ Description: Docker Desktop Kubernetes config
 5. Click "Save"
 
 ----------------------------------------------------
-STEP 4 — Create GitHub Webhook using ngrok
+STEP 5 — Jenkins setup
+----------------------------------------------------
+
+✅ STEP 1 — Install required plugins in Jenkins
+
+Open Jenkins → Manage Jenkins
+
+Click Manage Plugins
+
+Under Available (or Installed), ensure these plugins exist:
+
+GitHub plugin
+Pipeline
+Git plugin
+GitHub Integration
+Docker Pipeline (optional, good to have)
+
+If anything is missing → Install it → Restart Jenkins.
+
+✅ STEP 2 — Create a Pipeline Job that uses your Jenkinsfile
+
+Even though your Jenkinsfile is in GitHub, Jenkins needs a job pointing to your repo.
+
+🔹 Follow these steps:
+
+Go to Jenkins Home
+Click New Item
+Enter name: salesdemo-ci
+Select Pipeline
+Click OK
+
+Now configure it:
+
+🔸 Scroll to Pipeline section:
+
+Set Definition → Pipeline script from SCM
+SCM → Git
+Repository URL → https://github.com/Vivekkashyap043/salesdemo.git
+
+
+Credentials → leave blank (public repo)
+
+Branches to build → */main
+
+Script Path → Jenkinsfile
+
+🔸 Scroll to Build Triggers
+
+Check this box:
+
+[✔] GitHub hook trigger for GITScm polling
+
+Click Save
+
+Now Jenkins knows where the Jenkinsfile is, and is waiting for GitHub to notify it.
+
+----------------------------------------------------
+STEP 5 — Create GitHub Webhook using ngrok
 ----------------------------------------------------
 Run the command:
 ngrok http 8090
@@ -52,7 +109,7 @@ Set GitHub webhook URL as:
 https://<your-ngrok-url>/github-webhook/
 
 --------------------------------------------------------------------
-STEP 5 — Create namespace and deploying to kubernets (only first time)
+STEP 6 — Create namespace and deploying to kubernets (only first time)
 ---------------------------------------------------------------------
 
 1. Create namespace
