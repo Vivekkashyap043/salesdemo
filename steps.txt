@@ -50,3 +50,19 @@ https://autogenous-unconvolutely-jinny.ngrok-free.dev
 
 Set GitHub webhook URL as:
 https://<your-ngrok-url>/github-webhook/
+
+--------------------------------------------------------------------
+STEP 5 — Create namespace and deploying to kubernets (only first time)
+---------------------------------------------------------------------
+
+1. Create namespace
+kubectl apply -f k8s/namespace.yml
+
+2. Deploy your app (first time only)
+kubectl apply -n salesdemo -f k8s/deployment.yml
+kubectl apply -n salesdemo -f k8s/service.yml
+
+3. Verify
+kubectl get deployments -n salesdemo
+kubectl get pods -n salesdemo
+kubectl get svc -n salesdemo
