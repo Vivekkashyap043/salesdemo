@@ -22,7 +22,79 @@ How to use this document:
 - Use **Running and Verifying the Pipeline** and **Useful Commands** when testing or debugging the CI/CD flow.
 
 This document assumes you have basic familiarity with Git, the command line (PowerShell on Windows), and administrative access to install software.
+ 
+## Methodology
 
+This section describes the practical methodology used to develop, build, test, package, and deploy the Sales Project. The methodology follows common DevOps practices to ensure fast feedback, safe deployments, and reproducible artifacts.
+
+1. Development & Source Control
+
+    - Branching: Use a feature-branch workflow. Developers create branches from `main` (e.g., `feature/add-sales-endpoint`) and open Pull Requests (PRs) for review.
+    - Code review: Require at least one reviewer per PR; run automated checks before merging.
+    - Commit hygiene: Keep commits atomic and include meaningful messages. Use signed commits if your team requires it.
+
+2. Automated Tests & Quality Gates
+
+    - Local tests: Developers run unit tests locally with the Maven wrapper before pushing: `./mvnw test` (Windows: `.\mvnw.cmd test`).
+    - CI tests: Jenkins runs `mvnw -B clean test` on each PR or push to `main`. Failing tests block the pipeline.
+    - Optional quality gates: Add static analysis (SpotBugs, PMD) and code coverage checks in the pipeline before merging.
+
+3. Build & Artifact Creation
+
+    - Maven package: After tests pass, the pipeline runs `mvnw -B -DskipTests package` to produce the JAR artifact.
+    - Artifact immutability: Use the commit SHA as an immutable identifier for images and artifacts.
+
+4. Containerization & Image Management
+
+    - Multi-stage Docker builds: `Dockerfile` uses a build stage to produce the JAR and a runtime stage to keep the image small.
+    - Image tagging: Tag images with both `sha-<shortSHA>` and `latest`. For example: `vivekkashyap043/salesdemo:sha-03e39f7` and `vivekkashyap043/salesdemo:latest`.
+    - Registry: Push images to Docker Hub. Consider a private registry for production.
+    - Image scanning: Integrate image scanning for CVEs (Trivy/Clair) as part of the pipeline before pushing to production.
+
+5. CI/CD Pipeline (Jenkins)
+
+    - Stages: `Checkout` → `Build & Test` → `Package` → `Docker Build` → `Push to Registry` → `Deploy to Kubernetes`.
+    - Credentials: Store Docker credentials and `kubeconfig` in Jenkins Credentials and use `withCredentials` to avoid leaking secrets.
+    - Idempotency: Pipeline steps are idempotent—re-running a failed stage should be safe.
+
+6. Deployment Strategy
+
+    - Rolling updates: Use Kubernetes Deployments to perform rolling updates; Jenkins uses `kubectl set image` to change the Deployment image and `kubectl rollout status` to wait for completion.
+    - Health checks: Add `livenessProbe` and `readinessProbe` to `deployment.yml` so Kubernetes only routes traffic to healthy pods.
+    - Blue/Green or Canary (optional): For higher safety, migrate to Blue/Green or Canary deployments via labels/feature flags or a service mesh.
+
+7. Rollback Procedures
+
+    - Automatic rollback: If `kubectl rollout status` fails, Jenkins should mark the build as failed; manual rollback can be performed with `kubectl rollout undo deployment/salesdemo-deployment -n salesdemo`.
+    - Historic images: Keep previous image tags in the registry so rollbacks can reference specific SHAs.
+
+8. Environment Parity
+
+    - Local parity: Use Docker Desktop with Kubernetes enabled to mirror staging environment locally where possible.
+    - Configuration: Keep environment-specific configuration outside images (ConfigMaps/Secrets) and inject at runtime.
+
+9. Monitoring, Logging & Alerts
+
+    - Logs: Use centralized logging (e.g., Elasticsearch/Fluentd/Kibana or Grafana Loki) to aggregate pod logs.
+    - Metrics & alerts: Expose Prometheus metrics from the app and configure alerts for error rates, latency, and pod restarts.
+
+10. Security & Secrets
+
+    - Secrets: Store credentials in Jenkins Credentials and Kubernetes Secrets; use RBAC to limit access.
+    - Least privilege: Limit Docker Hub tokens and kubeconfig permissions to only what the CI needs.
+    - Dependency scanning: Run dependency vulnerability scans on build artifacts (e.g., OWASP Dependency-Check).
+
+11. Observability & Post-deploy Verification
+
+    - Smoke tests: After deployment, run quick smoke/integration tests against the service endpoint to verify basic functionality.
+    - Synthetic transactions: Use periodic synthetic tests to validate availability.
+
+12. Continuous Improvement
+
+    - Blameless postmortems: For any incidents, conduct postmortems, capture root causes, and add pipeline or test coverage to prevent regressions.
+    - Metrics-driven work: Track pipeline duration, failure rates, and mean time to recovery (MTTR) and improve accordingly.
+
+This methodology provides a repeatable, safe, and auditable flow from code change to production deployment; adapt steps (e.g., add staging environments) as your team and risk profile evolve.
 
 ## 1. Executive Summary
 
