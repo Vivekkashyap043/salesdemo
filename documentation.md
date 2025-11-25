@@ -461,6 +461,40 @@ kubectl apply -n salesdemo -f k8s/service.yml
 
 ---
 
+## 13. Results
+
+After implementing the pipeline described in this document, you should be able to demonstrate the following concrete results:
+
+- **Automated CI/CD flow:** Commits to the repository trigger Jenkins to run tests, build artifacts, create Docker images, push to Docker Hub, and update Kubernetes — with minimal manual steps.
+- **Reproducible artifacts:** Builds use the Maven wrapper and multi-stage Dockerfile, producing consistent JARs and images tagged by commit SHA for traceability.
+- **Faster feedback loop:** Automated tests in CI provide quick feedback to developers, reducing integration defects.
+- **Safe deployment:** Kubernetes rolling updates with liveness/readiness probes and `kubectl rollout status` reduce downtime and enable controlled rollouts.
+- **Rollback capability:** Historic image tags and `kubectl rollout undo` allow fast recovery from faulty releases.
+- **Auditability:** Image tags and Jenkins build logs give an audit trail from commit → build → deploy.
+
+Measure success by tracking pipeline run time, failure rate, deployment success rate, and mean time to recovery (MTTR) after incidents.
+
+---
+
+## 14. Conclusion
+
+This Sales Project repository provides a compact, practical example of a modern CI/CD pipeline using Jenkins, Docker, Docker Hub, and Kubernetes. It demonstrates best practices such as:
+
+- Using the Maven wrapper for reproducible builds.
+- Building small runtime images via multi-stage Dockerfiles.
+- Storing credentials securely in Jenkins and avoiding secrets in code.
+- Tagging images with immutable identifiers (commit SHAs) and keeping `latest` for convenience.
+- Automating rolling updates and verifying rollouts with `kubectl`.
+
+The documentation here is intended to be a living artifact: update it when pipeline stages change, when credentials or registry configuration are revised, and when you add monitoring or release strategies (canary/blue-green). If you want, I can:
+
+- Insert screenshots into the placeholders you provide.
+- Generate a printable `.docx` with formatted headings and embedded images.
+- Add a table of contents and cross-reference links for navigation.
+
+Please let me know which of these you'd like next and provide screenshots (or tell me where to capture them), and I will update the document accordingly.
+
+
 ## Appendix A — README.md (included for quick reference)
 
 Below is the repository `README.md` content that documents Jenkins / Docker Hub / Kubernetes setup steps as provided in the project.
