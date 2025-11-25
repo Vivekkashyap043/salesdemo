@@ -6,6 +6,24 @@
 
 ---
 
+## Introduction
+
+This document describes the Sales Project (Salesdemo) and the CI/CD workflow implemented around it. It is intended for developers, DevOps engineers, and maintainers who need to understand, run, or extend the pipeline. The goals are:
+
+- Provide a clear overview of what the project does and why the CI/CD pipeline exists.
+- Explain core DevOps concepts used in this project (CI/CD, Docker, Jenkins, Docker Hub, Kubernetes).
+- Give a step-by-step guide to set up, run, and troubleshoot the pipeline using the files in this repository.
+- Include code snippets, commands, and placeholders for screenshots so you can reproduce the setup and audit the pipeline.
+
+How to use this document:
+
+- Read the **DevOps Concepts** section if you need background on the technologies.
+- Follow **Setup & Installation** to prepare your machine, install Jenkins, Docker Desktop, and configure credentials.
+- Use **Running and Verifying the Pipeline** and **Useful Commands** when testing or debugging the CI/CD flow.
+
+This document assumes you have basic familiarity with Git, the command line (PowerShell on Windows), and administrative access to install software.
+
+
 ## 1. Executive Summary
 
 - **Project:** Sales Project (Salesdemo)
